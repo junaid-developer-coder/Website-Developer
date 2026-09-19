@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Antigravity Setup Guide: install on Windows and Linux</title>
+<meta name="description" content="Step-by-step, feature-by-feature installation of Google Antigravity on Windows and Linux: desktop app, CLI, IDE, editor extensions and Python SDK.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0D1020; --surface:#151936; --line:#2A2F5C; --text:#E8EAFB; --muted:#9AA0C8;
+  --accent:#7C6CFF; --accent-2:#2FD4C4; --code:#080A18; --code-text:#DCE0FF; --warn:#F2B84B;
+  --display:'Sora','Segoe UI',Helvetica,Arial,sans-serif;
+  --body:'IBM Plex Sans','Segoe UI',Helvetica,Arial,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Consolas,'Courier New',monospace;
+}
+@media (prefers-color-scheme:light){
+  :root:not([data-theme="dark"]){
+    --bg:#F6F7FE; --surface:#FFFFFF; --line:#D9DCF3; --text:#14183A; --muted:#545A88;
+    --accent:#5443E6; --accent-2:#0E8F84; --code:#0F1330; --warn:#8A5A00;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#F6F7FE; --surface:#FFFFFF; --line:#D9DCF3; --text:#14183A; --muted:#545A88;
+  --accent:#5443E6; --accent-2:#0E8F84; --code:#0F1330; --warn:#8A5A00;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:5.5rem}
+body{margin:0;background:var(--bg);color:var(--text);font:400 1rem/1.65 var(--body);-webkit-font-smoothing:antialiased}
+a{color:var(--accent-2)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent-2);outline-offset:3px;border-radius:4px}
+code{font-family:var(--mono);font-size:.9em}
+p code,li code,td code,summary code{background:color-mix(in srgb,var(--accent) 16%,transparent);padding:.1em .38em;border-radius:4px}
+
+/* top bar */
+.bar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:1rem;padding:.7rem clamp(1rem,3vw,2rem);background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar img{height:34px;width:auto;display:block}
+.brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--text);font:600 1.02rem var(--display)}
+.bar .spacer{flex:1}
+.os-switch{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px;background:var(--surface)}
+.os-switch button{border:0;background:transparent;color:var(--muted);font:500 .9rem var(--body);padding:.35rem 1rem;border-radius:999px;cursor:pointer}
+.os-switch button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.gh{color:var(--text);text-decoration:none;font-weight:500;font-size:.92rem;border:1px solid var(--line);border-radius:8px;padding:.4rem .8rem}
+.gh:hover{border-color:var(--accent-2)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:2rem;align-items:center;max-width:1180px;margin:0 auto;padding:clamp(2.5rem,7vw,5.5rem) clamp(1rem,3vw,2rem) 2.5rem}
+.hero h1{font:700 clamp(2rem,4.6vw,3.4rem)/1.08 var(--display);letter-spacing:-.03em;margin:0 0 1.1rem;max-width:18ch}
+.hero p.lead{color:var(--muted);font-size:1.12rem;max-width:56ch;margin:0 0 1.6rem}
+.hero .cta{display:flex;flex-wrap:wrap;gap:.7rem}
+.btn{display:inline-block;padding:.65rem 1.15rem;border-radius:10px;font-weight:600;text-decoration:none;font-size:.97rem}
+.btn.primary{background:var(--accent);color:#fff}
+.btn.ghost{border:1px solid var(--line);color:var(--text)}
+.btn.primary:hover{filter:brightness(1.1)}
+.btn.ghost:hover{border-color:var(--accent-2)}
+.mark{justify-self:center;width:min(300px,70%);position:relative}
+.mark svg{width:100%;height:auto;overflow:visible}
+.orb-group{animation:lift 5s ease-in-out infinite;transform-origin:50% 50%}
+.glow{animation:glow 5s ease-in-out infinite;transform-origin:64px 104px}
+@keyframes lift{0%,100%{transform:translateY(6px)}50%{transform:translateY(-8px)}}
+@keyframes glow{0%,100%{opacity:.9;transform:scaleX(1)}50%{opacity:.5;transform:scaleX(.82)}}
+@media (prefers-reduced-motion:reduce){.orb-group,.glow{animation:none}html{scroll-behavior:auto}}
+
+/* layout */
+.wrap{display:grid;grid-template-columns:230px minmax(0,1fr);gap:clamp(1.5rem,4vw,3.5rem);max-width:1180px;margin:0 auto;padding:1rem clamp(1rem,3vw,2rem) 4rem}
+nav.toc{position:sticky;top:5rem;align-self:start;font-size:.92rem}
+nav.toc p{margin:0 0 .6rem;color:var(--muted);font-weight:600}
+nav.toc ul{list-style:none;margin:0;padding:0;border-left:1px solid var(--line)}
+nav.toc a{display:block;padding:.32rem .9rem;color:var(--muted);text-decoration:none;margin-left:-1px;border-left:2px solid transparent}
+nav.toc a:hover{color:var(--text)}
+nav.toc a.active{color:var(--text);border-left-color:var(--accent-2);font-weight:500}
+main{min-width:0}
+section{padding:0 0 3rem;margin:0 0 3rem;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:0}
+h2{font:600 1.75rem/1.2 var(--display);letter-spacing:-.02em;margin:0 0 .6rem}
+h3{font:600 1.08rem var(--display);margin:1.8rem 0 .5rem}
+.sub{color:var(--muted);margin:0 0 1.4rem;max-width:64ch}
+.meta{display:flex;flex-wrap:wrap;gap:.5rem;margin:0 0 1.4rem;padding:0;list-style:none}
+.meta li{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:.25rem .65rem;font-size:.85rem;color:var(--muted)}
+.meta strong{color:var(--text);font-weight:600}
+
+/* OS visibility */
+body[data-os="win"] .os.lin, body[data-os="lin"] .os.win{display:none}
+
+/* steps */
+ol.steps{list-style:none;counter-reset:s;margin:0;padding:0}
+ol.steps>li{counter-increment:s;position:relative;padding:0 0 1.4rem 3rem}
+ol.steps>li::before{content:counter(s);position:absolute;left:0;top:0;width:2rem;height:2rem;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:1px solid var(--line);font:600 .88rem var(--display);color:var(--accent-2)}
+ol.steps>li::after{content:"";position:absolute;left:1rem;top:2.3rem;bottom:.3rem;width:1px;background:var(--line)}
+ol.steps>li:last-child::after{display:none}
+ol.steps h4{margin:.15rem 0 .35rem;font:600 1rem var(--display)}
+ol.steps p{margin:.2rem 0 .6rem;max-width:66ch}
+
+/* code */
+.code{position:relative;margin:.6rem 0 1rem}
+.code .label{position:absolute;top:.5rem;left:.9rem;font:500 .74rem var(--mono);color:#8B92C7}
+pre{margin:0;background:var(--code);color:var(--code-text);border:1px solid #23285a;border-radius:10px;padding:2rem 1rem .9rem;overflow-x:auto;font:400 .87rem/1.6 var(--mono)}
+.copy{position:absolute;top:.4rem;right:.5rem;background:#1b2050;color:#C9CEF7;border:1px solid #2f3675;border-radius:6px;font:500 .74rem var(--body);padding:.22rem .6rem;cursor:pointer}
+.copy:hover{background:#262d6b}
+.c{color:#7f87bd}
+
+.note{border-left:3px solid var(--accent-2);background:var(--surface);padding:.75rem 1rem;border-radius:0 8px 8px 0;margin:1rem 0;max-width:70ch}
+.note.warn{border-left-color:var(--warn)}
+.note strong{display:block;margin-bottom:.15rem}
+
+table{border-collapse:collapse;width:100%;font-size:.93rem;margin:1rem 0}
+th,td{text-align:left;padding:.6rem .75rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:.85rem}
+.scroll{overflow-x:auto}
+
+details{border:1px solid var(--line);background:var(--surface);border-radius:10px;margin:.6rem 0;padding:0 1rem}
+summary{cursor:pointer;padding:.85rem 0;font-weight:500}
+details[open] summary{border-bottom:1px solid var(--line);margin-bottom:.7rem}
+details>*:last-child{margin-bottom:1rem}
+
+.tree{font-family:var(--mono);font-size:.86rem}
+footer{border-top:1px solid var(--line);padding:2rem clamp(1rem,3vw,2rem);color:var(--muted);font-size:.88rem;text-align:center}
+
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr}
+  .mark{order:-1;width:170px;justify-self:start}
+  .wrap{grid-template-columns:1fr}
+  nav.toc{display:none}
+  .gh{display:none}
+}
+</style>
+</head>
+<body data-os="lin">
+
+<header class="bar">
+  <a class="brand" href="#top" aria-label="Antigravity Setup Guide home">
+    <img src="assets/logo-mark.svg" alt="" width="34" height="34">
+    Antigravity Setup Guide
+  </a>
+  <span class="spacer"></span>
+  <div class="os-switch" role="group" aria-label="Operating system">
+    <button type="button" data-set-os="win" aria-pressed="false">Windows</button>
+    <button type="button" data-set-os="lin" aria-pressed="true">Linux</button>
+  </div>
+  <a class="gh" href="https://github.com/YOUR-USERNAME/antigravity-setup-guide">GitHub</a>
+</header>
+
+<div class="hero" id="top">
+  <div>
+    <h1>Install Google Antigravity on Windows and Linux, one feature at a time.</h1>
+    <p class="lead">Pick your operating system above. Every section below shows only the commands for that system: the desktop app, the CLI, the standalone IDE, editor extensions and the Python SDK.</p>
+    <div class="cta">
+      <a class="btn primary" href="#prerequisites">Start with prerequisites</a>
+      <a class="btn ghost" href="https://antigravity.google/download">Official download page</a>
+    </div>
+  </div>
+  <div class="mark" aria-hidden="true">
+    <svg viewBox="0 0 128 128">
+      <defs>
+        <linearGradient id="h-orb" x1="18%" y1="8%" x2="82%" y2="92%"><stop offset="0" stop-color="#9B8CFF"/><stop offset="1" stop-color="#2FD4C4"/></linearGradient>
+        <linearGradient id="h-base" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7C6CFF"/><stop offset="1" stop-color="#2FD4C4"/></linearGradient>
+      </defs>
+      <g class="glow"><path d="M18 104 Q64 86 110 104" fill="none" stroke="url(#h-base)" stroke-width="7" stroke-linecap="round"/></g>
+      <g class="orb-group">
+        <circle cx="64" cy="48" r="26" fill="url(#h-orb)"/>
+        <path d="M50 38 A18 18 0 0 1 66 27" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="4" stroke-linecap="round"/>
+      </g>
+    </svg>
+  </div>
+</div>
+
+<div class="wrap">
+  <nav class="toc" aria-label="On this page">
+    <p>On this page</p>
+    <ul>
+      <li><a href="#prerequisites">Prerequisites</a></li>
+      <li><a href="#desktop">Desktop app (2.0)</a></li>
+      <li><a href="#cli">Command line (CLI)</a></li>
+      <li><a href="#ide">Standalone IDE</a></li>
+      <li><a href="#extensions">Editor extensions</a></li>
+      <li><a href="#sdk">Python SDK</a></li>
+      <li><a href="#verify">Verify and update</a></li>
+      <li><a href="#troubleshooting">Troubleshooting</a></li>
+      <li><a href="#publish">Publish this repository</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+  <section id="prerequisites">
+    <h2>Prerequisites</h2>
+    <p class="sub">Check your system before you download anything. Versions below were current on 19 September 2026; the <a href="https://antigravity.google/download">download page</a> is always the source of truth.</p>
+
+    <div class="scroll">
+    <table>
+      <thead><tr><th>Component</th><th>Version listed</th><th>Windows</th><th>Linux</th></tr></thead>
+      <tbody>
+        <tr><td>Antigravity 2.0 (desktop)</td><td>v2.14.0</td><td>Windows 10 (64-bit) or later, x64 or ARM64</td><td>glibc 2.28+, glibcxx 3.4.25+, x64 or ARM64</td></tr>
+        <tr><td>Antigravity CLI</td><td>v1.2.0</td><td>PowerShell or CMD</td><td>curl and bash</td></tr>
+        <tr><td>Antigravity IDE (standalone)</td><td>v2.5.5</td><td>x64 or ARM64 installer</td><td>x64 or ARM64 tarball</td></tr>
+        <tr><td>Antigravity SDK (Python)</td><td>v0.1.16</td><td colspan="2">Python and Git; see the SDK repository</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="os lin">
+      <h3>Check your Linux system</h3>
+      <div class="code"><span class="label">bash</span><button class="copy" type="button">Copy</button>
+<pre><code>ldd --version | head -n1     <span class="c"># glibc must be 2.28 or newer</span>
+uname -m                     <span class="c"># x86_64 = x64, aarch64 = ARM64</span>
+cat /etc/os-release | head -n3</code></pre></div>
+      <p>Ubuntu 20 or newer, Debian 10 or newer, Fedora 36 or newer and RHEL 8 or newer meet the glibc requirement.</p>
+    </div>
+    <div class="os win">
+      <h3>Check your Windows system</h3>
+      <div class="code"><span class="label">PowerShell</span><button class="copy" type="button">Copy</button>
+<pre><code>$env:PROCESSOR_ARCHITECTURE   <span class="c"># AMD64 = x64, ARM64 = ARM64</span>
+winver                        <span class="c"># shows your Windows version</span></code></pre></div>
+    </div>
+
+    <div class="note"><strong>Before you start</strong>You need a Google account to sign in. Download only from <code>antigravity.google</code>; third-party mirrors and "cracked" builds are a common way to ship malware.</div>
+  </section>
+
+  <section id="desktop">
+    <h2>Desktop app (Antigravity 2.0)</h2>
+    <p class="sub">The main agent workspace. Install this first if you want the full graphical experience.</p>
+
+    <div class="os win">
+    <ol class="steps">
+      <li><h4>Download the installer</h4>
+        <p>Open the <a href="https://antigravity.google/download">download page</a>, choose the <strong>Windows</strong> tab under Antigravity 2.0, and click <strong>Download for x64</strong> (or <strong>ARM64</strong> on Windows on ARM). The file is named <code>Antigravity-x64.exe</code> or <code>Antigravity-arm64.exe</code>.</p></li>
+      <li><h4>Run the installer</h4>
+        <p>Double-click the file in your Downloads folder. If SmartScreen appears, confirm the publisher and the download source, then choose <strong>More info</strong> and <strong>Run anyway</strong>.</p></li>
+      <li><h4>Launch and sign in</h4>
+        <p>Open Antigravity from the Start menu. Sign in with your Google account in the browser window that opens, then return to the app.</p></li>
+      <li><h4>Open your first workspace</h4>
+        <p>Choose a project folder, describe a task to the agent and review the result before accepting changes.</p></li>
+    </ol>
+    </div>
+
+    <div class="os lin">
+    <ol class="steps">
+      <li><h4>Download the tarball</h4>
+        <p>On the <a href="https://antigravity.google/download">download page</a>, choose the <strong>Linux</strong> tab under Antigravity 2.0 and download the <strong>x64</strong> or <strong>ARM64</strong> file. Both are named <code>Antigravity.tar.gz</code>.</p></li>
+      <li><h4>Extract to a folder you own</h4>
+        <p>A per-user location avoids needing root.</p>
+        <div class="code"><span class="label">bash</span><button class="copy" type="button">Copy</button>
+<pre><code>mkdir -p ~/.local/opt/antigravity
+tar -xzf ~/Downloads/Antigravity.tar.gz -C ~/.local/opt/antigravity
+ls ~/.local/opt/antigravity</code></pre></div></li>
+      <li><h4>Find the launcher and start it</h4>
+        <p>The listing shows the extracted folder and its executable. Run the executable from a terminal the first time so any error is visible.</p></li>
+      <li><h4>Sign in</h4>
+        <p>A browser window opens for Google sign-in. Finish there and return to the app.</p></li>
+      <li><h4>Optional: add a menu entry and command</h4>
+        <p>Create a symlink to the executable in <code>~/.local/bin</code> and a <code>.desktop</code> file in <code>~/.local/share/applications</code>. Community installers automate this; see the note below.</p></li>
+    </ol>
+    <div class="note warn"><strong>Community installers</strong>Some GitHub projects package the official tarball as <code>.deb</code>, <code>.rpm</code> or a one-line script. They are not made by Google. Read any script before piping it to a shell, and prefer the official download when in doubt.</div>
+    </div>
+  </section>
+
+  <section id="cli">
+    <h2>Command line (CLI)</h2>
+    <p class="sub">Use Antigravity from your terminal, inside any codebase.</p>
+
+    <div class="os win">
+    <ol class="steps">
+      <li><h4>Open PowerShell</h4><p>Use a normal (non-administrator) window.</p></li>
+      <li><h4>Run the official installer</h4>
+        <div class="code"><span class="label">PowerShell</span><button class="copy" type="button">Copy</button>
+<pre><code>irm https://antigravity.google/cli/install.ps1 | iex</code></pre></div>
+        <p>Prefer Command Prompt? Use this instead:</p>
+        <div class="code"><span class="label">CMD</span><button class="copy" type="button">Copy</button>
+<pre><code>curl -fsSL https://antigravity.google/cli/install.cmd -o install.cmd &amp;&amp; install.cmd &amp;&amp; del install.cmd</code></pre></div></li>
+      <li><h4>Open a new terminal</h4><p>A new window picks up any PATH change the installer made. Then run the command name the installer printed.</p></li>
+    </ol>
+    <p>To read the script before running it:</p>
+    <div class="code"><span class="label">PowerShell</span><button class="copy" type="button">Copy</button>
+<pre><code>irm https://antigravity.google/cli/install.ps1 -OutFile install.ps1
+notepad install.ps1
+.\install.ps1</code></pre></div>
+    </div>
+
+    <div class="os lin">
+    <ol class="steps">
+      <li><h4>Run the official installer</h4>
+        <div class="code"><span class="label">bash</span><button class="copy" type="button">Copy</button>
+<pre><code>curl -fsSL https://antigravity.google/cli/install.sh | bash</code></pre></div></li>
+      <li><h4>Open a new shell</h4><p>A new session picks up any PATH change. Then run the command name the installer printed.</p></li>
+    </ol>
+    <p>To read the script before running it (recommended on shared or production machines):</p>
+    <div class="code"><span class="label">bash</span><button class="copy" type="button">Copy</button>
+<pre><code>curl -fsSL https://antigravity.google/cli/install.sh -o install.sh
+less install.sh
+bash install.sh</code></pre></div>
+    </div>
+  </section>
+
+  <section id="ide">
+    <h2>Standalone IDE</h2>
+    <p class="sub">A dedicated desktop application with integrated agent panels and a full execution workspace. It installs separately from the 2.0 desktop app.</p>
+
+    <div class="os win">
+    <ol class="steps">
+      <li><h4>Download</h4><p>On the download page, scroll to <strong>Antigravity for IDEs</strong>, then <strong>Antigravity IDE (Standalone)</strong>. Download the x64 or ARM64 file named <code>Antigravity IDE.exe</code>.</p></li>
+      <li><h4>Install and sign in</h4><p>Run the installer, launch <strong>Antigravity IDE</strong> from the Start menu and sign in with Google.</p></li>
+    </ol>
+    </div>
+
+    <div class="os lin">
+    <ol class="steps">
+      <li><h4>Download</h4><p>In <strong>Antigravity IDE (Standalone)</strong>, download the Linux x64 or ARM64 file named <code>Antigravity IDE.tar.gz</code>.</p></li>
+      <li><h4>Extract to its own folder</h4>
+        <div class="code"><span class="label">bash</span><button class="copy" type="button">Copy</button>
+<pre><code>mkdir -p ~/.local/opt/antigravity-ide
+tar -xzf "$HOME/Downloads/Antigravity IDE.tar.gz" -C ~/.local/opt/antigravity-ide
+ls ~/.local/opt/antigravity-ide</code></pre></div></li>
+      <li><h4>Launch and sign in</h4><p>Run the executable from the extracted folder and sign in with Google.</p></li>
+    </ol>
+    </div>
+  </section>
+
+  <section id="extensions">
+    <h2>Editor extensions</h2>
+    <p class="sub">Bring the agent into the editor you already use. Install steps differ per editor, so each one links to the official page.</p>
+    <div class="scroll">
+    <table>
+      <thead><tr><th>Editor</th><th>Notes</th><th>Official guide</th></tr></thead>
+      <tbody>
+        <tr><td>Visual Studio Code</td><td>Also supports VS Code Insiders.</td><td><a href="https://antigravity.google/docs/ide/extensions/vscode">VS Code docs</a></td></tr>
+        <tr><td>Visual Studio</td><td>Targets Visual Studio 2026. Windows only.</td><td><a href="https://antigravity.google/docs/ide/extensions/visual-studio">Visual Studio docs</a></td></tr>
+        <tr><td>JetBrains IDEs</td><td>IntelliJ IDEA, PyCharm, WebStorm, GoLand, CLion, Rider and others.</td><td><a href="https://antigravity.google/docs/ide/extensions/jetbrains">JetBrains docs</a></td></tr>
+        <tr><td>Zed</td><td>Enterprise support is in preview.</td><td><a href="https://antigravity.google/docs/ide/extensions/zed">Zed docs</a></td></tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="note"><strong>Xcode</strong>Xcode extensions exist but need macOS, so they are not covered by this Windows and Linux guide.</div>
+    <div class="os win"><p>On Windows, open the editor's extension or plugin manager, search for Antigravity, and follow the linked guide for sign-in.</p></div>
+    <div class="os lin"><p>On Linux, the VS Code, JetBrains and Zed guides apply. Restart the editor after installing so the agent panel loads.</p></div>
+  </section>
+
+  <section id="sdk">
+    <h2>Python SDK</h2>
+    <p class="sub">Build and orchestrate your own agents. The SDK is versioned separately (v0.1.16 when this was written), so expect API changes.</p>
+
+    <div class="os win">
+    <ol class="steps">
+      <li><h4>Install Python and Git</h4><p>Get both from their official sites if <code>python --version</code> and <code>git --version</code> fail.</p></li>
+      <li><h4>Create an isolated environment</h4>
+        <div class="code"><span class="label">PowerShell</span><button class="copy" type="button">Copy</button>
+<pre><code>git clone https://github.com/google-antigravity/antigravity-sdk-python
+cd antigravity-sdk-python
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1</code></pre></div></li>
+      <li><h4>Install as the repository README directs</h4><p>The README lists the exact install command and authentication steps for the current release.</p></li>
+    </ol>
+    </div>
+
+    <div class="os lin">
+    <ol class="steps">
+      <li><h4>Confirm Python and Git</h4>
+        <div class="code"><span class="label">bash</span><button class="copy" type="button">Copy</button>
+<pre><code>python3 --version
+git --version</code></pre></div></li>
+      <li><h4>Create an isolated environment</h4>
+        <div class="code"><span class="label">bash</span><button class="copy" type="button">Copy</button>
+<pre><code>git clone https://github.com/google-antigravity/antigravity-sdk-python
+cd antigravity-sdk-python
+python3 -m venv .venv
+source .venv/bin/activate</code></pre></div></li>
+      <li><h4>Install as the repository README directs</h4><p>The README lists the exact install command and authentication steps for the current release.</p></li>
+    </ol>
+    </div>
+  </section>
+
+  <section id="verify">
+    <h2>Verify and update</h2>
+    <ul>
+      <li>Launch each component you installed and confirm you can sign in.</li>
+      <li>Check the version in the app against the <a href="https://antigravity.google/changelog">changelog</a>.</li>
+      <li class="os win">Update the desktop app and IDE by downloading and running the newest installer over the old one. For the CLI, run the same install command again.</li>
+      <li class="os lin">Update the desktop app and IDE by extracting a newer tarball into a fresh folder, then switching your launcher to it. For the CLI, run the same install command again.</li>
+      <li>Older builds are listed on the <a href="https://antigravity.google/releases">releases page</a> if you need to roll back.</li>
+    </ul>
+  </section>
+
+  <section id="troubleshooting">
+    <h2>Troubleshooting</h2>
+    <details class="os win"><summary>SmartScreen blocks the installer</summary>
+      <p>Confirm you downloaded from <code>antigravity.google</code>, then choose <strong>More info</strong> and <strong>Run anyway</strong>. If your organization manages Windows, ask IT to allow the installer.</p></details>
+    <details class="os win"><summary>The CLI command is not found</summary>
+      <p>Close every terminal and open a new one so the updated PATH loads. If it still fails, re-run the installer and read its final output for the install location.</p></details>
+    <details class="os lin"><summary>The app will not start on Linux</summary>
+      <p>Start it from a terminal and read the error. Two common causes: an old glibc (check with <code>ldd --version</code>) and Electron sandbox permissions. Do not disable the sandbox as a first step; look for guidance in the official docs or support page first.</p></details>
+    <details class="os lin"><summary>Wrong architecture</summary>
+      <p>Run <code>uname -m</code>. <code>x86_64</code> needs the x64 build and <code>aarch64</code> needs the ARM64 build.</p></details>
+    <details><summary>Sign-in loops or fails</summary>
+      <p>Confirm your default browser opens, that you are signed in to the right Google account there, and that a proxy or VPN is not blocking Google sign-in.</p></details>
+    <details><summary>Where to get help</summary>
+      <p>Use the official <a href="https://antigravity.google/support">support page</a> and <a href="https://antigravity.google/docs/getting-started">documentation</a>. Open an issue in this repository for mistakes in this guide.</p></details>
+  </section>
+
+  <section id="publish">
+    <h2>Publish this repository</h2>
+    <p class="sub">This site is a static page, so GitHub Pages hosts it with no build step.</p>
+    <ol class="steps">
+      <li><h4>Create the repository</h4><p>On GitHub, create a public repository named <code>antigravity-setup-guide</code>.</p></li>
+      <li><h4>Push the files</h4>
+        <div class="code"><span class="label">bash or PowerShell</span><button class="copy" type="button">Copy</button>
+<pre><code>git init
+git add .
+git commit -m "Initial commit: Antigravity setup guide"
+git branch -M main
+git remote add origin https://github.com/YOUR-USERNAME/antigravity-setup-guide.git
+git push -u origin main</code></pre></div></li>
+      <li><h4>Turn on Pages</h4><p>In the repository, open <strong>Settings</strong>, then <strong>Pages</strong>, and set <strong>Source</strong> to <strong>GitHub Actions</strong>. The included workflow deploys on every push to <code>main</code>.</p></li>
+      <li><h4>Replace the placeholders</h4><p>Search the repository for <code>YOUR-USERNAME</code> and replace it with your GitHub username.</p></li>
+    </ol>
+    <h3>Repository layout</h3>
+<pre class="tree"><code>antigravity-setup-guide/
+├── index.html
+├── assets/
+│   ├── logo-mark.svg
+│   ├── logo-horizontal.svg
+│   └── favicon.svg
+├── .github/workflows/pages.yml
+├── README.md
+├── CONTRIBUTING.md
+├── LICENSE
+└── .gitignore</code></pre>
+  </section>
+
+  </main>
+</div>
+
+<footer>
+  Community guide. Not affiliated with, endorsed by or supported by Google. Google and Antigravity are trademarks of Google LLC. The logo on this site is an original mark made for this repository and is not Google's logo.
+</footer>
+
+<script>
+(function(){
+  var body=document.body, KEY='ag-guide-os';
+  function setOS(os){
+    body.setAttribute('data-os',os);
+    document.querySelectorAll('[data-set-os]').forEach(function(b){
+      b.setAttribute('aria-pressed', b.getAttribute('data-set-os')===os ? 'true':'false');
+    });
+    try{localStorage.setItem(KEY,os)}catch(e){}
+  }
+  var saved=null; try{saved=localStorage.getItem(KEY)}catch(e){}
+  var guess=/Win/i.test(navigator.platform||navigator.userAgent)?'win':'lin';
+  setOS(saved||guess);
+  document.querySelectorAll('[data-set-os]').forEach(function(b){
+    b.addEventListener('click',function(){setOS(b.getAttribute('data-set-os'))});
+  });
+
+  document.querySelectorAll('.copy').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var code=btn.parentElement.querySelector('code');
+      var text=code.innerText;
+      var done=function(){btn.textContent='Copied';setTimeout(function(){btn.textContent='Copy'},1500)};
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done,function(){});
+      }else{
+        var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();
+        try{document.execCommand('copy');done()}catch(e){}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+
+  var links=[].slice.call(document.querySelectorAll('nav.toc a'));
+  var map={};links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a});
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          links.forEach(function(a){a.classList.remove('active')});
+          var a=map[e.target.id]; if(a) a.classList.add('active');
+        }
+      });
+    },{rootMargin:'-20% 0px -70% 0px'});
+    document.querySelectorAll('main section[id]').forEach(function(s){io.observe(s)});
+  }
+})();
+</script>
+</body>
+</html>
