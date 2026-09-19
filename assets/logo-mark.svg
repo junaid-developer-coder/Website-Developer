@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Antigravity Setup Guide logo">
+  <defs>
+    <linearGradient id="orb" x1="18%" y1="8%" x2="82%" y2="92%">
+      <stop offset="0" stop-color="#9B8CFF"/>
+      <stop offset="1" stop-color="#2FD4C4"/>
+    </linearGradient>
+    <linearGradient id="base" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7C6CFF"/>
+      <stop offset="1" stop-color="#2FD4C4"/>
+    </linearGradient>
+  </defs>
+  <path d="M18 104 Q64 86 110 104" fill="none" stroke="url(#base)" stroke-width="7" stroke-linecap="round"/>
+  <g stroke="url(#base)" stroke-width="4" stroke-linecap="round">
+    <line x1="48" y1="90" x2="48" y2="86" opacity=".35"/>
+    <line x1="64" y1="88" x2="64" y2="80" opacity=".6"/>
+    <line x1="80" y1="90" x2="80" y2="86" opacity=".35"/>
+  </g>
+  <circle cx="64" cy="48" r="26" fill="url(#orb)"/>
+  <path d="M50 38 A18 18 0 0 1 66 27" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="4" stroke-linecap="round"/>
+</svg>
