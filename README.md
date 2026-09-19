@@ -58,7 +58,7 @@ python3 -m http.server 8000
 
 ## Logo
 
-`assets/logo-mark.svg` is a floating orb above a curved base: an object lifted off the ground. The horizontal version pairs it with the project name. Both are original artwork released under the repository's MIT license.
+`<img src="assets/logo-mark.svg" > is a floating orb above a curved base: an object lifted off the ground. The horizontal version pairs it with the project name. Both are original artwork released under the repository's MIT license.
 
 ## License
 
